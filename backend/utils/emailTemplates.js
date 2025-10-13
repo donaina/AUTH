@@ -52,7 +52,7 @@ export const getVerificationEmailTemplate = (name, verificationToken) => {
           <p>Hi ${name},</p>
           <p>Thank you for signing up! Please use the following OTP to verify your email address:</p>
           <div class="otp-code">${verificationToken}</div>
-          <p>This code will expire in 24 hours.</p>
+          <p>This code will expire in 15 minutes.</p>
           <p>If you didn't request this, please ignore this email.</p>
         </div>
         <div class="footer">
