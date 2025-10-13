@@ -1,12 +1,115 @@
-# Node.js
-node_modules/
+# Environment Variables
 .env
+.env.local
+.env.development
+.env.test
+.env.production
+.env*.local
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
 dist/
 build/
-*.log
+.next/
+out/
 
-# macOS
-.DS_Store
-
-# VSCode
+# IDE and Editor files
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Operating System files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Upload directories (user-uploaded files)
+uploads/
+public/uploads/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Documentation (if auto-generated)
+docs/api/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Sensitive data files
+secrets.json
+credentials.json
+serviceAccountKey.json
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Mac-specific
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows-specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# SSL Certificates (if stored locally)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Large media files (optional - if you don't want to track them)
+# *.mp4
+# *.mov
+# *.avi
+# *.mkv
