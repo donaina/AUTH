@@ -5,7 +5,7 @@ import {
   getWelcomeEmailTemplate,
 } from "./emailTemplates.js";
 
-// Use the imported transporter
+// Send Verification Email
 export const sendVerificationEmail = async (email, name, verificationToken) => {
   try {
     const mailOptions = {
@@ -24,6 +24,7 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
   }
 };
 
+// Send Password Reset Email
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
   try {
     const mailOptions = {
@@ -41,7 +42,8 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
     throw new Error("Failed to send password reset email");
   }
 };
-
+  
+// Send Welcome Email
 export const sendWelcomeEmail = async (email, name) => {
   try {
     const mailOptions = {

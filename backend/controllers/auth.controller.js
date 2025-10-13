@@ -72,17 +72,57 @@ export const verifyEmail = async (req, res) => {
 
     await sendWelcomeEmail(user.email,user.name);
     
-    return res.status(200).json({success: true, message: "Email verified successfully."});
-  } catch (error){
-    return res.status(500).json({success: false, message: "Internal server error"});
+    return res.status(200).json({
+      success: true,
+      message: "Email verified successfully.",
+      user: {
+        ...user._doc,
+        password: undefined,
+      }
+    });
+  } catch (error) {
+    console.log("Error verifiying Emmail", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
   }
 }
 
-// Placeholder login function
+// Login function
 export const login = async (req, res) => {
-  res.send("Login Route");
-}
-// Placeholder logout function
+  const { email, password } = req.body; // <-- Add this line
+  try{
+    const user = await User.findOne({email});
+    if (!user){
+      return res.status(400).json({success: false, message: "Invalid credentials"})
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if(!isPasswordValid){
+      return res.status(400).json({success:false,message: "Invalid credentials"})
+    }
+
+    generateTokenAndSetCookie(res,user._id);
+
+    user.lastLogin = Date.now();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Logged in Successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      }
+    })
+
+  } catch(error){
+    console.log("Error in Login", error);
+    res.status(400).json({success: false, message: error.message})
+
+} }
+// Logout function
 export const logout = async (req, res) => {
-  res.send("Logout Route");
+  res.clearCookie("token");
+  res.status(200).json({success: true, message: "Logged out successfully"});
 }
