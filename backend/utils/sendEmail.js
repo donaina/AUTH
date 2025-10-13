@@ -9,7 +9,7 @@ import {
 export const sendVerificationEmail = async (email, name, verificationToken) => {
   try {
     const mailOptions = {
-      from: `"Eduvrs Labs" <${process.env.EMAIL_USER}>`,
+      from: `"Eduvrse Labs" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email Address",
       html: getVerificationEmailTemplate(name, verificationToken),
@@ -27,7 +27,7 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
   try {
     const mailOptions = {
-      from: `"Eduvrs Labs" <${process.env.EMAIL_USER}>`,
+      from: `"Eduvrse Labs" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Reset Your Password",
       html: getPasswordResetEmailTemplate(name, resetToken),
@@ -45,7 +45,7 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 export const sendWelcomeEmail = async (email, name) => {
   try {
     const mailOptions = {
-      from: `"Eduvrs Labs" <${process.env.EMAIL_USER}>`,
+      from: `"Eduvrse Labs" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Welcome to Our Eduvrs!",
       html: getWelcomeEmailTemplate(name),
