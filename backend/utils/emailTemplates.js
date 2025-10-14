@@ -64,7 +64,7 @@ export const getVerificationEmailTemplate = (name, verificationToken) => {
   `;
 };
 
-export const getPasswordResetEmailTemplate = (name, resetToken) => {
+export const getPasswordResetEmailTemplate = (name, resetURL) => {
   return `
     <!DOCTYPE html>
     <html>
@@ -89,16 +89,18 @@ export const getPasswordResetEmailTemplate = (name, resetToken) => {
           text-align: center;
           border-radius: 5px 5px 0 0;
         }
-        .otp-code {
-          font-size: 32px;
-          font-weight: bold;
-          color: #f44336;
-          text-align: center;
-          padding: 20px;
-          background-color: #f4f4f4;
+        .button {
+          display: inline-block;
+          padding: 15px 30px;
+          font-size: 18px;
+          color: #fff;
+          background-color: #f44336;
+          border: none;
           border-radius: 5px;
+          text-decoration: none;
+          text-align: center;
           margin: 20px 0;
-          letter-spacing: 5px;
+          cursor: pointer;
         }
         .footer {
           margin-top: 20px;
@@ -116,9 +118,9 @@ export const getPasswordResetEmailTemplate = (name, resetToken) => {
         </div>
         <div style="padding: 20px;">
           <p>Hi ${name},</p>
-          <p>You requested to reset your password. Use the following code:</p>
-          <div class="otp-code">${resetToken}</div>
-          <p>This code will expire in 1 hour.</p>
+          <p>You requested to reset your password. Click the button below:</p>
+          <a href="${resetURL}" class="button">Reset Password</a>
+          <p>This link will expire in 10 minutes.</p>
           <p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>
         </div>
         <div class="footer">
