@@ -1,7 +1,8 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs"; 
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail, sendWelcomeEmail } from "../utils/sendEmail.js";
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // Signup controller
 export const signup = async (req, res) => {
@@ -121,8 +122,37 @@ export const login = async (req, res) => {
     res.status(400).json({success: false, message: error.message})
 
 } }
+
+
 // Logout function
 export const logout = async (req, res) => {
   res.clearCookie("token");
   res.status(200).json({success: true, message: "Logged out successfully"});
+}
+
+// Forgot Password function
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    // Generate secure reset token and set expiration
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+    user.resetPasswordToken = resetToken;
+    user.resetTokenExpiresAt = resetTokenExpiresAt;
+    await user.save();
+    // Send reset email with secure token in URL
+    await sendPasswordResetEmail(email, user.name, `${process.env.CLIENT_URL}/reset-password/${resetToken}`);
+    return res.status(200).json({ success: true, message: "Password reset email sent" });
+  } catch (error) {
+    console.log("Error in forgotPassword", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
 }

@@ -25,13 +25,13 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 };
 
 // Send Password Reset Email
-export const sendPasswordResetEmail = async (email, name, resetToken) => {
+export const sendPasswordResetEmail = async (email, name, resetURL) => {
   try {
     const mailOptions = {
       from: `"Eduvrse Labs" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Reset Your Password",
-      html: getPasswordResetEmailTemplate(name, resetToken),
+      html: getPasswordResetEmailTemplate(name, resetURL), // <-- Call the function!
     };
 
     const info = await transporter.sendMail(mailOptions);
