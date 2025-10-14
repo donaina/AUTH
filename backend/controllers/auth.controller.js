@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs"; 
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from "../utils/sendEmail.js";
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendPasswordResetSuccessEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 
 // Signup controller
@@ -156,3 +156,57 @@ export const forgotPassword = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
 }
+
+// Reset Password function
+export const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    if (!password) {
+      return res.status(400).json({ success: false, message: "Password is required" });
+    }
+
+    // Find user by reset token and check expiration
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid or expired password reset token" 
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user's password and clear reset token fields
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetTokenExpiresAt = undefined;
+    await user.save();
+
+    // Send success confirmation email
+    try {
+      await sendPasswordResetSuccessEmail(user.email, user.name);
+    } catch (emailError) {
+      // Log error but don't fail the request
+      console.error("Failed to send confirmation email:", emailError);
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: "Password has been reset successfully" 
+    });
+
+  } catch (error) {
+    console.log("Error in resetPassword", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
+  }
+};
