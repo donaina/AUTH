@@ -3,6 +3,7 @@ import {
   getVerificationEmailTemplate,
   getPasswordResetEmailTemplate,
   getWelcomeEmailTemplate,
+  getPasswordResetSuccessTemplate
 } from "./emailTemplates.js";
 
 // Send Verification Email
@@ -40,6 +41,27 @@ export const sendPasswordResetEmail = async (email, name, resetURL) => {
   } catch (error) {
     console.error("Error sending password reset email:", error);
     throw new Error("Failed to send password reset email");
+  }
+};
+
+// Send Password Reset Successful Email
+export const sendPasswordResetSuccessEmail = async (email, name) => {
+  try {
+    const mailOptions = {
+      from: `"Eduvrse Labs" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Password Reset Successful - Eduvrse Labs",
+      html: getPasswordResetSuccessTemplate(name),
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Password reset success email sent:", info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error("Error sending password reset success email:", error);
+    // Don't throw error - password was already reset successfully
+    // Just log the error
+    return { success: false, error: error.message };
   }
 };
   
